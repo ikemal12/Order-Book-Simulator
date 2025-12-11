@@ -1,5 +1,51 @@
 #include "orderbook.hpp"
 
+void OrderBook::addOrder(const Order& order) {
+    Order incomingOrder = order;
+
+    std::multiset<Order>& matchAgainst = incomingOrder.isBuy ? asks : bids;
+
+    //try to match
+    auto it = matchAgainst.begin();
+    while (it != matchAgainst.end() && incomingOrder.quantity > 0) {
+        bool canMatch = false;
+        if (incomingOrder.isBuy) {
+            canMatch = (incomingOrder.price >= it->price);
+        } else {
+            canMatch = (incomingOrder.price <= it->price);
+        }
+
+        if (!canMatch) {
+            break;
+        }
+
+        int tradeQuantity = std::min(incomingOrder.quantity, it->quantity);
+
+        std::cout << std::format("TRADE: {} shares at {:.2f}\n",
+                                tradeQuantity, it->price);
+
+        incomingOrder.quantity -= tradeQuantity;
+
+        Order modifiedOrder = *it;
+        modifiedOrder.quantity -= tradeQuantity;
+
+        it = matchAgainst.erase(it);
+
+        if (modifiedOrder.quantity > 0) {
+            matchAgainst.insert(modifiedOrder);
+        }
+    }
+
+    // if theres remaining quantity, add to appropriate book
+    if (incomingOrder.quantity > 0) {
+        if (incomingOrder.isBuy) {
+            bids.insert(incomingOrder);
+        } else {
+            asks.insert(incomingOrder);
+        }
+    }
+}
+
 bool OrderBook::cancelOrder(int orderId) {
     // try to find in bids first
     auto it = findOrder(bids, orderId);
