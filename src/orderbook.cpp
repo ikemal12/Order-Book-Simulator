@@ -1,5 +1,23 @@
 #include "orderbook.hpp"
 
+bool OrderBook::cancelOrder(int orderId) {
+    // try to find in bids first
+    auto it = findOrder(bids, orderId);
+    if (it != bids.end()) {
+        bids.erase(it);
+        return true;
+    }
+
+    // not in bids, try asks
+    it = findOrder(asks, orderId);
+    if (it != asks.end()) {
+        asks.erase(it);
+        return true;
+    }
+
+    return false; // not found anywhere
+}
+
 std::optional<Order> OrderBook::bestBid() const {
     if (bids.empty()) {
         return std::nullopt;
