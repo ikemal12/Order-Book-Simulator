@@ -2,4 +2,10 @@
 
 ## Roadmap
 
-* Implement the order book class methods
+* Basic Order class with price, quantity, side, type (done)
+* OrderBook with matching, cancel, top-of-book (done)
+* Trade history
+* Levels
+* Order modification
+* More order types 
+* ...
