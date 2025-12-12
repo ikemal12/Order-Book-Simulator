@@ -17,8 +17,8 @@ int main() {
 
     // Test 2: Add some buy orders (bids)
     std::cout << "Adding buy orders...\n";
-    book.addOrder(Order(4, 99.50, 8, True));
-    book.addOrder(Order(5, 99.00, 12, True));
+    book.addOrder(Order(4, 99.50, 8, true));
+    book.addOrder(Order(5, 99.00, 12, true));
 
     book.printTopOfBook();
     std::cout << "\n";

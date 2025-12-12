@@ -21,8 +21,7 @@ void OrderBook::addOrder(const Order& order) {
 
         int tradeQuantity = std::min(incomingOrder.quantity, it->quantity);
 
-        std::cout << std::format("TRADE: {} shares at {:.2f}\n",
-                                tradeQuantity, it->price);
+        std::cout << "TRADE: " << tradeQuantity << " shares at $" << it->price << "\n";
 
         incomingOrder.quantity -= tradeQuantity;
 
