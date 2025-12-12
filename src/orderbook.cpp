@@ -78,6 +78,28 @@ std::optional<Order> OrderBook::bestAsk() const {
     return *asks.begin();
 }
 
+void OrderBook::printTopOfBook() const {
+    std::cout << "=== Top of Book ===\n";
+
+    auto bid = bestBid();
+    if (bid.has_value()) {
+        std::cout << "Best Bid: ";
+        bid.value().print();
+    } else {
+        std::cout << "Best Bid: None\n";
+    }
+
+    auto ask = bestAsk();
+    if (ask.has_value()) {
+        std::cout << "Best Ask: ";
+        ask.value().print();
+    } else {
+        std::cout << "Best Ask: None\n";
+    }
+
+    std::cout << "===================\n";   
+}
+
 std::multiset<Order>::iterator OrderBook::findOrder(std::multiset<Order>& book, int orderId) {
     for (auto it = book.begin(); it != book.end(); ++it) {
         if (it->id == orderId) {
