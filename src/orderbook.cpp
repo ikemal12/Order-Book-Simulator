@@ -1,4 +1,5 @@
 #include "orderbook.hpp"
+#include <format>
 
 void OrderBook::addOrder(const Order& order) {
     Order incomingOrder = order;
@@ -21,7 +22,7 @@ void OrderBook::addOrder(const Order& order) {
 
         int tradeQuantity = std::min(incomingOrder.quantity, it->quantity);
 
-        std::cout << "TRADE: " << tradeQuantity << " shares at $" << it->price << "\n";
+        std::cout << std::format("TRADE: {} shares at ${:.2f}\n", tradeQuantity, it->price);
 
         incomingOrder.quantity -= tradeQuantity;
 

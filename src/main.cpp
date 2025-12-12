@@ -1,5 +1,6 @@
 #include "orderbook.hpp"
 #include <iostream>
+#include <format>
 
 int main() {
     OrderBook book;
@@ -33,7 +34,7 @@ int main() {
     // Test 4: Cancel an order
     std::cout << "Cancelling order #4...\n";
     bool cancelled = book.cancelOrder(4);
-    std::cout << "Cancel " << (cancelled ? "successful" : "failed") << "\n";
+    std::cout << std::format("Cancel {}\n", cancelled ? "successful" : "failed");
 
     book.printTopOfBook();
     std::cout << "\n";

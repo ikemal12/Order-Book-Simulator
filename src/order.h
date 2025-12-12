@@ -25,9 +25,9 @@ public:
         timestamp(std::chrono::system_clock::now()) {}
 
     void print() const {
-        std::cout << "Order ID: " << id << ", Price: " << price << ", Quantity: " << quantity 
-                  << ", Side: " << (isBuy ? "Buy" : "Sell") 
-                  << ", Type: " << (type == OrderType::LIMIT ? "Limit" : "Market") << "\n";
+        std::cout << std::format("Order ID: {}, Price: {:.2f}, Quantity: {}, Side: {}, Type: {}\n",
+                  id, price, quantity, isBuy ? "Buy" : "Sell",
+                  type == OrderType::LIMIT ? "Limit" : "Market");
     }
 
     bool operator<(const Order& other) const {
