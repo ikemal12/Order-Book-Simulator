@@ -1,6 +1,7 @@
 #include "orderbook.hpp"
 #include <format>
 #include <map>
+#include <cmath>
 
 void OrderBook::addOrder(const Order& order) {
     Order incomingOrder = order;
@@ -26,7 +27,9 @@ void OrderBook::addOrder(const Order& order) {
         std::cout << std::format("TRADE: {} shares at ${:.2f}\n", tradeQuantity, it->price);
 
         // create and store trade
-        Trade trade(incomingOrder.id, it->id, it->price, tradeQuantity);
+        int buyOrderId = incomingOrder.isBuy ? incomingOrder.id : it->id;
+        int sellOrderId = incomingOrder.isBuy ? it->id : incomingOrder.id;
+        Trade trade(buyOrderId, sellOrderId, it->price, tradeQuantity);
         trades.push_back(trade);
         trade.print();
 
@@ -114,10 +117,11 @@ std::vector<Trade> OrderBook::getRecentTrades(int n) const {
     std::vector<Trade> recent;
 
     // calculate how many trades to return
-    int startIdx = std::max(0, static_cast<int>(trades.size()) - n);
+    size_t count = std::min(static_cast<size_t>(n), trades.size());
+    size_t startIdx = trades.size() - count;
 
     // copy the last n trades
-    for (int i = startIdx; i < trades.size(); ++i) {
+    for (size_t i = startIdx; i < trades.size(); ++i) {
         recent.push_back(trades[i]);
     }
 
@@ -153,9 +157,10 @@ std::optional<double> OrderBook::getSpread() const {
 int OrderBook::getVolumeAtPrice(double price, bool isBuy) const {
     const std::multiset<Order>& book = isBuy ? bids : asks;
     int totalVolume = 0;
+    const double EPSILON = 0.0001;
 
     for (const auto& order: book) {
-        if (order.price == price) {
+        if (std::abs(order.price - price) < EPSILON) {
             totalVolume += order.quantity;
         }
     }
