@@ -220,6 +220,37 @@ void OrderBook::printDepth(int levels) const {
     std::cout << "=========================\n";
 }
 
+bool OrderBook::modifyOrder(int orderId, std::optional<double> newPrice, std::optional<int> newQuantity) {
+    // find order -> check bids first then asks
+    auto it = findOrder(bids, orderId);
+    bool isBid = (it != bids.end());
+
+    if (it == bids.end()) {
+        it = findOrder(asks, orderId);
+        if (it == asks.end()) {
+            return false; // order not found
+        }
+    }
+
+    std::multiset<Order>& book = isBid ? bids : asks;
+    Order modifiedOrder = *it;
+
+    if (newPrice.has_value()) {
+        modifiedOrder.price = newPrice.value();
+    }
+
+    if (newQuantity.has_value()) {
+        modifiedOrder.quantity = newQuantity.value();
+    }
+
+    // update timestamp
+    modifiedOrder.timestamp = std::chrono::system_clock::now();
+
+    book.erase(it);
+    book.insert(modifiedOrder);
+    return true;
+}
+
 std::multiset<Order>::iterator OrderBook::findOrder(std::multiset<Order>& book, int orderId) {
     for (auto it = book.begin(); it != book.end(); ++it) {
         if (it->id == orderId) {

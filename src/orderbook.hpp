@@ -33,6 +33,8 @@ public:
     int getVolumeAtPrice(double price, bool isBuy) const;
     void printDepth(int levels = 5) const;
 
+    bool modifyOrder(int orderId, std::optional<double> newPrice, std::optional<int> newQuantity);
+
 private:
     std::multiset<Order> bids;  // highest price first
     std::multiset<Order> asks;  // lowest price first
