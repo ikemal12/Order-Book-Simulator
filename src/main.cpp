@@ -39,5 +39,15 @@ int main() {
     book.printTopOfBook();
     std::cout << "\n";
 
+    // Test 5: Print trade history
+    book.printTradeHistory();
+
+    // Test 6: Get recent trades
+    std::cout << "\nGetting last 2 trades:\n";
+    auto recentTrades = book.getRecentTrades(2);
+    for (const auto& trade : recentTrades) {
+        trade.print();
+    }
+
     return 0;
 }
