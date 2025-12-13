@@ -24,6 +24,11 @@ void OrderBook::addOrder(const Order& order) {
 
         std::cout << std::format("TRADE: {} shares at ${:.2f}\n", tradeQuantity, it->price);
 
+        // create and store trade
+        Trade trade(incomingOrder.id, it->id, it->price, tradeQuantity);
+        trades.push_back(trade);
+        trade.print();
+
         incomingOrder.quantity -= tradeQuantity;
 
         Order modifiedOrder = *it;
@@ -98,6 +103,39 @@ void OrderBook::printTopOfBook() const {
     }
 
     std::cout << "===================\n";   
+}
+
+const std::vector<Trade>& OrderBook::getTrades() const {
+    return trades;
+}
+
+std::vector<Trade> OrderBook::getRecentTrades(int n) const {
+    std::vector<Trade> recent;
+
+    // calculate how many trades to return
+    int startIdx = std::max(0, static_cast<int>(trades.size()) - n);
+
+    // copy the last n trades
+    for (int i = startIdx; i < trades.size(); ++i) {
+        recent.push_back(trades[i]);
+    }
+
+    return recent;
+}
+
+void OrderBook::printTradeHistory() const {
+    std::cout << "\n=== Trade History ===\n";
+    std::cout << std::format("Total trades: {}\n\n", trades.size());
+
+    if (trades.empty()) {
+        std::cout << "No trades executed yet.\n";
+        return;
+    }
+
+    for (const auto& trade : trades) {
+        trade.print();
+    }
+    std::cout << "=====================\n";
 }
 
 std::multiset<Order>::iterator OrderBook::findOrder(std::multiset<Order>& book, int orderId) {

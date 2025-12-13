@@ -5,6 +5,8 @@
 #include <optional>
 #include <iostream>
 #include "order.h"
+#include "trade.h"
+#include <vector>
 
 class OrderBook {
 public:
@@ -23,9 +25,14 @@ public:
     // Print top of the book
     void printTopOfBook() const;
 
+    const std::vector<Trade>& getTrades() const;
+    std::vector<Trade> getRecentTrades(int n) const;
+    void printTradeHistory() const;
+
 private:
     std::multiset<Order> bids;  // highest price first
     std::multiset<Order> asks;  // lowest price first
+    std::vector<Trade> trades;
 
     // Helper: find order by ID
     std::multiset<Order>::iterator findOrder(std::multiset<Order>& book, int orderId);
