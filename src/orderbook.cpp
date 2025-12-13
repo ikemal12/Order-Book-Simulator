@@ -151,7 +151,7 @@ std::optional<double> OrderBook::getSpread() const {
 }
 
 int OrderBook::getVolumeAtPrice(double price, bool isBuy) const {
-    const auto& book = isBuy ? bids : asks;
+    const std::multiset<Order>& book = isBuy ? bids : asks;
     int totalVolume = 0;
 
     for (const auto& order: book) {

@@ -2,10 +2,15 @@
 
 ## Roadmap
 
-* Basic Order class with price, quantity, side, type (done)
-* OrderBook with matching, cancel, top-of-book (done)
+* Basic Order class (done)
+* OrderBook with matching (done)
 * Trade history (done)
-* Levels (done)
+* Levels, full book display (done)
 * Order modification (done)
-* More order types 
+* More types eg. Stop Loss, FOK, Immediate-or-Cancel/GTC
+* Market data/stats
+* Performance optimisation
+* Persistence/serialization
+* CLI simulator
+* Testing/benchmarking
 * ...
