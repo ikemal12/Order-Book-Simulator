@@ -138,6 +138,19 @@ void OrderBook::printTradeHistory() const {
     std::cout << "=====================\n";
 }
 
+std::optional<double> OrderBook::getSpread() const {
+    auto bid = bestBid();
+    auto ask = bestAsk();
+
+    if (bid.has_value() && ask.has_value()) {
+        return ask->price - bid->price;
+    } else {
+        return std::nullopt;
+    }
+}
+
+
+
 std::multiset<Order>::iterator OrderBook::findOrder(std::multiset<Order>& book, int orderId) {
     for (auto it = book.begin(); it != book.end(); ++it) {
         if (it->id == orderId) {

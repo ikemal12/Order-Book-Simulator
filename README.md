@@ -4,8 +4,8 @@
 
 * Basic Order class with price, quantity, side, type (done)
 * OrderBook with matching, cancel, top-of-book (done)
-* Trade history
-* Levels
+* Trade history (done)
+* Levels 
 * Order modification
 * More order types 
 * ...

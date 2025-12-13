@@ -29,6 +29,10 @@ public:
     std::vector<Trade> getRecentTrades(int n) const;
     void printTradeHistory() const;
 
+    std::optional<double> getSpread() const;
+    void printDepth(int levels = 5) const;
+    int getVolumeAtPrice(double price, bool isBuy) const;
+
 private:
     std::multiset<Order> bids;  // highest price first
     std::multiset<Order> asks;  // lowest price first
