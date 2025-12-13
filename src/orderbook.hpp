@@ -30,8 +30,8 @@ public:
     void printTradeHistory() const;
 
     std::optional<double> getSpread() const;
-    void printDepth(int levels = 5) const;
     int getVolumeAtPrice(double price, bool isBuy) const;
+    void printDepth(int levels = 5) const;
 
 private:
     std::multiset<Order> bids;  // highest price first

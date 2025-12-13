@@ -1,5 +1,6 @@
 #include "orderbook.hpp"
 #include <format>
+#include <map>
 
 void OrderBook::addOrder(const Order& order) {
     Order incomingOrder = order;
@@ -149,7 +150,75 @@ std::optional<double> OrderBook::getSpread() const {
     }
 }
 
+int OrderBook::getVolumeAtPrice(double price, bool isBuy) const {
+    const auto& book = isBuy ? bids : asks;
+    int totalVolume = 0;
 
+    for (const auto& order: book) {
+        if (order.price == price) {
+            totalVolume += order.quantity;
+        }
+    }
+    return totalVolume;
+}
+
+void OrderBook::printDepth(int levels) const {
+    std::cout << "\n=== Order Book Depth ===\n";
+
+    // Aggregate orders by price
+    std::map<double, int> askLevels; // price -> total quantity
+    std::map<double, int> bidLevels;
+
+    for (const auto& order : asks) {
+        askLevels[order.price] += order.quantity;
+    }
+
+    for (const auto& order : bids) {
+        bidLevels[order.price] += order.quantity;
+    }
+
+    // Convert to vectors for easier indexing
+    std::vector<std::pair<double, int>> askVector;
+    std::vector<std::pair<double, int>> bidVector;
+
+    // copy asks lowest to highest
+    for (const auto& level : askLevels) {
+        askVector.push_back(level);
+    }
+
+    // copy bids highest to lowest
+    for (auto it = bidLevels.rbegin(); it != bidLevels.rend(); ++it) {
+        bidVector.push_back(*it);
+    }
+
+    std::cout << "ASKS (Sellers):\n";
+
+    // print asks in reverse (highest to lowest)
+    int askCount = std::min(levels, static_cast<int>(askVector.size()));
+    for (int i = askCount - 1; i >= 0; --i) {
+        std::cout << std::format("  ${:>7.2f}  |  {:>4} shares\n",
+                                askVector[i].first, askVector[i].second);
+    }
+
+    // print spread
+    auto spread = getSpread();
+    if (spread.has_value()) {
+        std::cout << std::format("----------------------- SPREAD: ${:.2f} -----------------------\n",
+                                spread.value());                        
+    } else {
+        std::cout << "----------------------- NO SPREAD -----------------------\n";
+    }
+
+    // print bids
+    std::cout << "BIDS (Buyers):\n";
+    int bidCount = std::min(levels, static_cast<int>(bidVector.size()));
+    for (int i = 0; i < bidCount; ++i) {
+        std::cout << std::format("  ${:>7.2f}  |  {:>4} shares\n",
+                                bidVector[i].first, bidVector[i].second);
+    }
+
+    std::cout << "=========================\n";
+}
 
 std::multiset<Order>::iterator OrderBook::findOrder(std::multiset<Order>& book, int orderId) {
     for (auto it = book.begin(); it != book.end(); ++it) {
