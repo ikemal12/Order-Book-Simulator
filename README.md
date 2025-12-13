@@ -6,6 +6,6 @@
 * OrderBook with matching, cancel, top-of-book (done)
 * Trade history (done)
 * Levels (done)
-* Order modification
+* Order modification (done)
 * More order types 
 * ...

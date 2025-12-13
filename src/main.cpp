@@ -49,5 +49,20 @@ int main() {
         trade.print();
     }
 
+    // Test 7: Modify order price
+    std::cout << "\nModifying order #5 price to $99.75...\n";
+    book.modifyOrder(5, 99.75, std::nullopt);
+    book.printDepth(5);
+
+    // Test 8: Modify order quantity
+    std::cout << "\nModifying order #3 quantity to 20...\n";
+    book.modifyOrder(3, std::nullopt, 20);
+    book.printDepth(5);
+
+    // Test 9: Modify both price and quantity
+    std::cout << "\nModifying order #2 to $99.90 and 10 shares...\n";
+    book.modifyOrder(2, 99.90, 10);
+    book.printDepth(5);
+
     return 0;
 }
