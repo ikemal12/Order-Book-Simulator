@@ -6,6 +6,13 @@
 void OrderBook::addOrder(const Order& order) {
     Order incomingOrder = order;
 
+    if (incomingOrder.type == OrderType::STOP_LOSS) {
+        stopOrders.push_back(incomingOrder);
+        std::cout << std::format("Stop Loss order #{} added to queue (trigger @ ${:.2f})\n",
+                                incomingOrder.id, incomingOrder.stopPrice);
+        return;
+    }
+
     if (incomingOrder.type == OrderType::FILL_OR_KILL) {
         if (!canExecuteFillorKill(incomingOrder)) {
             std::cout << std::format("FILL_OR_KILL order #{} cancelled - insufficient liquidity\n",
@@ -69,6 +76,7 @@ void OrderBook::addOrder(const Order& order) {
             asks.insert(incomingOrder);
         }
     }
+    checkStopOrders();
 }
 
 bool OrderBook::cancelOrder(int orderId) {
@@ -301,4 +309,43 @@ bool OrderBook::canExecuteFillorKill(const Order& order) const {
         }
     }
     return false; 
+}
+
+double OrderBook:: getLastTradePrice() const {
+    if (trades.empty()) {
+        return 0.0; // no trades yet
+    }
+    return trades.back().price;
+}
+
+void OrderBook::checkStopOrders() {
+    if (trades.empty()) {
+        return;
+    }
+
+    double lastPrice = getLastTradePrice();
+
+    for (auto it = stopOrders.begin(); it != stopOrders.end(); ) {
+        bool shouldTrigger = false;
+
+        if (it->isBuy) {
+            shouldTrigger = (lastPrice >= it->stopPrice);
+        } else {
+            shouldTrigger = (lastPrice <= it->stopPrice);
+        }
+
+        if (shouldTrigger) {
+            std::cout << std::format("STOP ORDER TRIGGERED: Order #{} at ${:.2f}\n",
+                                    it->id, it->stopPrice);
+            
+            Order marketOrder = *it;
+            marketOrder.type = OrderType::MARKET;
+            
+            it = stopOrders.erase(it);
+
+            addOrder(marketOrder);
+        } else {
+            ++it;
+        }
+    }
 }

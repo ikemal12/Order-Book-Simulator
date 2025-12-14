@@ -98,6 +98,22 @@ int main() {
     std::cout << "\nTest 3: IOC buy 10 shares @ $95 (no match, all cancelled)...\n";
     book.addOrder(Order(302, 95.00, 10, true, OrderType::IMMEDIATE_OR_CANCEL));
     book.printDepth(5);
-    
+
+
+    // test stop loss orders
+    std::cout << "\n=== Testing Stop Loss Orders ===\n";
+
+    std::cout << "Adding stop loss orders...\n";
+    book.addOrder(Order(400, 0.0, 10, false, OrderType::STOP_LOSS, 99.00));
+    book.addOrder(Order(401, 0.0, 5, true, OrderType::STOP_LOSS, 101.00));
+    book.printDepth(5);
+
+    std::cout << "\nExecuting trade at $98 (should trigger sell stop @ $99)...\n";
+    book.addOrder(Order(402, 98.00, 1, false));
+
+    std::cout << "\nExecuting trade at $102 (should trigger buy stop @ $101)...\n";
+    book.addOrder(Order(403, 102.00, 1, true));
+    book.printDepth(5);
+        
     return 0;
 }

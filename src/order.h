@@ -10,7 +10,8 @@ enum class OrderType {
     MARKET,
     LIMIT,
     FILL_OR_KILL,
-    IMMEDIATE_OR_CANCEL
+    IMMEDIATE_OR_CANCEL,
+    STOP_LOSS
 };
 
 class Order {
@@ -21,10 +22,12 @@ public:
     bool isBuy;
     std::chrono::time_point<std::chrono::system_clock> timestamp;
     OrderType type;
+    double stopPrice; // trigger price for stop orders
 
-    Order(int id, double price, int quantity, bool isBuy, OrderType type = OrderType::LIMIT)
+    Order(int id, double price, int quantity, bool isBuy, OrderType type = OrderType::LIMIT, double stopPrice = 0.0)
         : id(id), price(price), quantity(quantity), isBuy(isBuy), type(type), 
-        timestamp(std::chrono::system_clock::now()) {}
+        timestamp(std::chrono::system_clock::now()),
+        stopPrice(stopPrice) {}
 
     void print() const;
 

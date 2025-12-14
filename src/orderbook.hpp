@@ -39,12 +39,16 @@ private:
     std::multiset<Order> bids;  // highest price first
     std::multiset<Order> asks;  // lowest price first
     std::vector<Trade> trades;
+    std::vector<Order> stopOrders;
 
     // Helper: find order by ID
     std::multiset<Order>::iterator findOrder(std::multiset<Order>& book, int orderId);
 
     // Helper for Fill-or-Kill validation
     bool canExecuteFillorKill(const Order& order) const;
+
+    void checkStopOrders();
+    double getLastTradePrice() const;
 };
 
 #endif 

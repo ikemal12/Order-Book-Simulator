@@ -15,6 +15,9 @@ void Order::print() const {
         case OrderType::IMMEDIATE_OR_CANCEL:
             typeStr = "Immediate-or-Cancel";
             break;
+        case OrderType::STOP_LOSS:
+            typeStr = std::format("Stop Loss @ ${:.2f}", stopPrice);
+            break;
     }
 
     std::cout << std::format("Order ID: {}, Price: {:.2f}, Quantity: {}, Side: {}, Type: {}\n",
