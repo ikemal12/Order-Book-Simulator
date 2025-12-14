@@ -6,6 +6,14 @@
 void OrderBook::addOrder(const Order& order) {
     Order incomingOrder = order;
 
+    if (incomingOrder.type == OrderType::FILL_OR_KILL) {
+        if (!canExecuteFillorKill(incomingOrder)) {
+            std::cout << std::format("FILL_OR_KILL order #{} cancelled - insufficient liquidity\n",
+                                    incomingOrder.id);
+            return; 
+        }
+    }
+
     std::multiset<Order>& matchAgainst = incomingOrder.isBuy ? asks : bids;
 
     //try to match
@@ -263,4 +271,26 @@ std::multiset<Order>::iterator OrderBook::findOrder(std::multiset<Order>& book, 
         }
     }
     return book.end();
+}
+
+bool OrderBook::canExecuteFillorKill(const Order& order) const {
+    const std::multiset<Order>& matchAgainst = order.isBuy ? asks : bids;
+    int availableQuantity = 0;
+
+    for (const auto& existingOrder : matchAgainst) {
+        bool canMatch = order.isBuy ? 
+            (order.price >= existingOrder.price) :
+            (order.price <= existingOrder.price);
+
+        if (!canMatch) {
+            break;
+        }
+
+        availableQuantity += existingOrder.quantity;
+
+        if (availableQuantity >= order.quantity) {
+            return true; // sufficient quantity available
+        }
+    }
+    return false; 
 }

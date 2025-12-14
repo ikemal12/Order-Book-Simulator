@@ -7,8 +7,9 @@
 #include <iostream>
 
 enum class OrderType {
+    MARKET,
     LIMIT,
-    MARKET
+    FILL_OR_KILL,
 };
 
 class Order {

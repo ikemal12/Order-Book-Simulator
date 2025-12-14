@@ -42,6 +42,9 @@ private:
 
     // Helper: find order by ID
     std::multiset<Order>::iterator findOrder(std::multiset<Order>& book, int orderId);
+
+    // Helper for Fill-or-Kill validation
+    bool canExecuteFillorKill(const Order& order) const;
 };
 
 #endif 
