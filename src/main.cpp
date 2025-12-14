@@ -64,5 +64,21 @@ int main() {
     book.modifyOrder(2, 99.90, 10);
     book.printDepth(5);
 
+    // Testing fill or kill
+    std::cout << "\n=== Testing Fill-or-Kill Orders ===\n";
+    book.printDepth(5);
+
+    std::cout << "\nTest 1: FOK buy 100 shares @ $102 (should fail)...\n";
+    book.addOrder(Order(200, 102.00, 100, true, OrderType::FILL_OR_KILL));
+    book.printDepth(5);
+
+    std::cout << "\nTest 2: FOK buy 5 shares @ $102 (should succeed)...\n";
+    book.addOrder(Order(201, 102.00, 5, true, OrderType::FILL_OR_KILL));
+    book.printDepth(5);
+
+    std::cout << "\nTest 3: FOK sell 10 shares @98 (check if it works)...\n";
+    book.addOrder(Order(202, 98.00, 10, false, OrderType::FILL_OR_KILL));
+    book.printDepth(5);
+
     return 0;
 }
