@@ -10,6 +10,7 @@ enum class OrderType {
     MARKET,
     LIMIT,
     FILL_OR_KILL,
+    IMMEDIATE_OR_CANCEL
 };
 
 class Order {

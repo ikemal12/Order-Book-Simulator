@@ -80,5 +80,24 @@ int main() {
     book.addOrder(Order(202, 98.00, 10, false, OrderType::FILL_OR_KILL));
     book.printDepth(5);
 
+    // test IOC
+    std::cout << "\n=== Testing Immediate-or-Cancel Orders ===\n";
+    book.printDepth(5);
+
+    // test 1: IOC that partially fills
+    std::cout << "\nTest 1: IOC buy 50 shares @ $102 (should partially fill)...\n";
+    book.addOrder(Order(300, 102.00, 50, true, OrderType::IMMEDIATE_OR_CANCEL));
+    book.printDepth(5);
+
+    // test 2: IOC that fully fills
+    std::cout << "\nTest 2: IOC buy 3 shares @ $102 (should fill completely)...\n";
+    book.addOrder(Order(301, 102.00, 3, true, OrderType::IMMEDIATE_OR_CANCEL));
+    book.printDepth(5);
+
+    // test 3: IOC with no matches
+    std::cout << "\nTest 3: IOC buy 10 shares @ $95 (no match, all cancelled)...\n";
+    book.addOrder(Order(302, 95.00, 10, true, OrderType::IMMEDIATE_OR_CANCEL));
+    book.printDepth(5);
+    
     return 0;
 }

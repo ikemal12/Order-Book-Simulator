@@ -55,6 +55,14 @@ void OrderBook::addOrder(const Order& order) {
 
     // if theres remaining quantity, add to appropriate book
     if (incomingOrder.quantity > 0) {
+        // IOC: dont add to book -> just cancel remainder
+        if (incomingOrder.type == OrderType::IMMEDIATE_OR_CANCEL) {
+            std::cout << std::format("IOC order #{}: {} shares cancelled (unfilled)\n",
+                                    incomingOrder.id, incomingOrder.quantity);
+            return;
+        }
+
+        // regular orders -> add to book
         if (incomingOrder.isBuy) {
             bids.insert(incomingOrder);
         } else {
