@@ -280,6 +280,16 @@ bool OrderBook::modifyOrder(int orderId, std::optional<double> newPrice, std::op
     return true;
 }
 
+std::optional<double> OrderBook::getMidPrice() const {
+    auto bid = bestBid();
+    auto ask = bestAsk();
+
+    if (bid.has_value() && ask.has_value()) {
+        return (bid->price + ask->price) / 2.0;
+    } 
+    return std::nullopt;
+}
+
 std::multiset<Order>::iterator OrderBook::findOrder(std::multiset<Order>& book, int orderId) {
     for (auto it = book.begin(); it != book.end(); ++it) {
         if (it->id == orderId) {
