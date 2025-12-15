@@ -7,10 +7,13 @@
 * Trade history (done)
 * Levels, full book display (done)
 * Order modification (done)
-* More types eg. Stop Loss, FOK, Immediate-or-Cancel/GTC
-* Market data/stats
-* Performance optimisation
-* Persistence/serialization
-* CLI simulator
+* Different types eg. Stop Loss, FOK, Immediate-or-Cancel (done)
+* Market data/stats eg mid, VWAP, ratio, volume (doing)
+* Performance optimisation eg multithreading, memory pool allocation
 * Testing/benchmarking
 * ...
+
+Maybes
+* Persistence/serialization
+* CLI simulator
+* real-time websockets API

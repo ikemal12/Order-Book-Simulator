@@ -35,6 +35,15 @@ public:
 
     bool modifyOrder(int orderId, std::optional<double> newPrice, std::optional<int> newQuantity);
 
+    // stats
+    std::optional<double> getMidPrice() const;
+    double getVWAP() const;
+    double getOrderBookImbalance() const;
+    int getTotalBidVolume() const;
+    int getTotalAskVolume() const;
+    int getVolumeInRange(double minPrice, double maxPrice, bool isBuy) const;
+    void printMarketSummary() const;
+
 private:
     std::multiset<Order> bids;  // highest price first
     std::multiset<Order> asks;  // lowest price first
