@@ -290,6 +290,22 @@ std::optional<double> OrderBook::getMidPrice() const {
     return std::nullopt;
 }
 
+int OrderBook::getTotalBidVolume() const {
+    int total = 0;
+    for (const auto& order : bids) {
+        total += order.quantity;
+    }
+    return total;
+}
+
+int OrderBook::getTotalAskVolume() const {
+    int total = 0;
+    for (const auto& order : asks) {
+        total += order.quantity;
+    }
+    return total;
+}
+
 std::multiset<Order>::iterator OrderBook::findOrder(std::multiset<Order>& book, int orderId) {
     for (auto it = book.begin(); it != book.end(); ++it) {
         if (it->id == orderId) {
