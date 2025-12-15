@@ -306,6 +306,17 @@ int OrderBook::getTotalAskVolume() const {
     return total;
 }
 
+double OrderBook::getOrderBookImbalance() const {
+    int bidVol = getTotalBidVolume();
+    int askVol = getTotalAskVolume();
+
+    if (askVol == 0) {
+        return bidVol > 0 ? 999.0 : 1.0; // avoid division by zero
+    }
+
+    return static_cast<double>(bidVol) / static_cast<double>(askVol);
+}
+
 std::multiset<Order>::iterator OrderBook::findOrder(std::multiset<Order>& book, int orderId) {
     for (auto it = book.begin(); it != book.end(); ++it) {
         if (it->id == orderId) {
