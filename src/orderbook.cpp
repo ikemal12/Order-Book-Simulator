@@ -317,6 +317,28 @@ double OrderBook::getOrderBookImbalance() const {
     return static_cast<double>(bidVol) / static_cast<double>(askVol);
 }
 
+double OrderBook::getVWAP() const {
+    if (trades.empty()) {
+        return 0.0;
+    }
+
+    double totalValue = 0.0; // sum of (price * quantity)
+    int totalVolume = 0;
+
+    for (const auto& trade : trades) {
+        totalValue += trade.price * trade.quantity;
+        totalVolume += trade.quantity;
+    }
+
+    if (totalVolume == 0) {
+        return 0.0;
+    }
+
+    return totalValue / totalVolume;
+}
+
+
+
 std::multiset<Order>::iterator OrderBook::findOrder(std::multiset<Order>& book, int orderId) {
     for (auto it = book.begin(); it != book.end(); ++it) {
         if (it->id == orderId) {
