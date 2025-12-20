@@ -10,15 +10,15 @@ void OrderBook::addOrder(const Order& order) {
 
     if (incomingOrder.type == OrderType::STOP_LOSS) {
         stopOrders.push_back(incomingOrder);
-        std::cout << std::format("Stop Loss order #{} added to queue (trigger @ ${:.2f})\n",
-                                incomingOrder.id, incomingOrder.stopPrice);
+        //std::cout << std::format("Stop Loss order #{} added to queue (trigger @ ${:.2f})\n",
+                                //incomingOrder.id, incomingOrder.stopPrice);
         return;
     }
 
     if (incomingOrder.type == OrderType::FILL_OR_KILL) {
         if (!canExecuteFillorKill(incomingOrder)) {
-            std::cout << std::format("FILL_OR_KILL order #{} cancelled - insufficient liquidity\n",
-                                    incomingOrder.id);
+            //std::cout << std::format("FILL_OR_KILL order #{} cancelled - insufficient liquidity\n",
+                                    //incomingOrder.id);
             return; 
         }
     }
@@ -47,7 +47,7 @@ void OrderBook::addOrder(const Order& order) {
 
         int tradeQuantity = std::min(incomingOrder.quantity, it->quantity);
 
-        std::cout << std::format("TRADE: {} shares at ${:.2f}\n", tradeQuantity, it->price);
+        //std::cout << std::format("TRADE: {} shares at ${:.2f}\n", tradeQuantity, it->price);
 
         // create and store trade
         int buyOrderId = incomingOrder.isBuy ? incomingOrder.id : it->id;
@@ -74,8 +74,8 @@ void OrderBook::addOrder(const Order& order) {
     if (incomingOrder.quantity > 0) {
         // IOC: dont add to book -> just cancel remainder
         if (incomingOrder.type == OrderType::IMMEDIATE_OR_CANCEL) {
-            std::cout << std::format("IOC order #{}: {} shares cancelled (unfilled)\n",
-                                    incomingOrder.id, incomingOrder.quantity);
+            //std::cout << std::format("IOC order #{}: {} shares cancelled (unfilled)\n",
+                                    //incomingOrder.id, incomingOrder.quantity);
             return;
         }
 
@@ -380,8 +380,8 @@ void OrderBook::checkStopOrders() {
         }
 
         if (shouldTrigger) {
-            std::cout << std::format("STOP ORDER TRIGGERED: Order #{} at ${:.2f}\n",
-                                    it->id, it->stopPrice);
+            //std::cout << std::format("STOP ORDER TRIGGERED: Order #{} at ${:.2f}\n",
+                                    //it->id, it->stopPrice);
             
             Order marketOrder = *it;
             marketOrder.type = OrderType::MARKET;
