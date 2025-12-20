@@ -53,10 +53,13 @@ void OrderBook::addOrder(const Order& order) {
         Order modifiedOrder = *it;
         modifiedOrder.quantity -= tradeQuantity;
 
+        // remove from index before erasing
+        orderIndex.erase(it->id);
         it = matchAgainst.erase(it);
 
         if (modifiedOrder.quantity > 0) {
-            matchAgainst.insert(modifiedOrder);
+            auto newIt = matchAgainst.insert(modifiedOrder);
+            orderIndex[modifiedOrder.id] = newIt;
         }
     }
 
@@ -69,32 +72,31 @@ void OrderBook::addOrder(const Order& order) {
             return;
         }
 
-        // regular orders -> add to book
-        if (incomingOrder.isBuy) {
-            bids.insert(incomingOrder);
-        } else {
-            asks.insert(incomingOrder);
-        }
+        // regular orders -> add to book and index
+        auto it = incomingOrder.isBuy ? bids.insert(incomingOrder) : asks.insert(incomingOrder);
+        orderIndex[incomingOrder.id] = it;
     }
     checkStopOrders();
 }
 
 bool OrderBook::cancelOrder(int orderId) {
-    // try to find in bids first
-    auto it = findOrder(bids, orderId);
-    if (it != bids.end()) {
-        bids.erase(it);
-        return true;
+    auto indexIt = orderIndex.find(orderId);
+
+    if (indexIt == orderIndex.end()) {
+        return false;
     }
 
-    // not in bids, try asks
-    it = findOrder(asks, orderId);
-    if (it != asks.end()) {
-        asks.erase(it);
-        return true;
-    }
+    auto orderIt = indexIt->second;
 
-    return false; // not found anywhere
+    if (orderIt->isBuy) {
+        bids.erase(orderIt);
+    } else {
+        asks.erase(orderIt);
+    }
+    
+    orderIndex.erase(indexIt);
+
+    return true; 
 }
 
 std::optional<Order> OrderBook::bestBid() const {
@@ -250,18 +252,14 @@ void OrderBook::printDepth(int levels) const {
 }
 
 bool OrderBook::modifyOrder(int orderId, std::optional<double> newPrice, std::optional<int> newQuantity) {
-    // find order -> check bids first then asks
-    auto it = findOrder(bids, orderId);
-    bool isBid = (it != bids.end());
+    auto indexIt = orderIndex.find(orderId);
 
-    if (it == bids.end()) {
-        it = findOrder(asks, orderId);
-        if (it == asks.end()) {
-            return false; // order not found
-        }
+    if (indexIt == orderIndex.end()) {
+        return false;
     }
 
-    std::multiset<Order>& book = isBid ? bids : asks;
+    auto it = indexIt->second;
+    std::multiset<Order>& book = it->isBuy ? bids : asks;
     Order modifiedOrder = *it;
 
     if (newPrice.has_value()) {
@@ -275,8 +273,12 @@ bool OrderBook::modifyOrder(int orderId, std::optional<double> newPrice, std::op
     // update timestamp
     modifiedOrder.timestamp = std::chrono::system_clock::now();
 
+    orderIndex.erase(indexIt);
     book.erase(it);
-    book.insert(modifiedOrder);
+
+    auto newIt = book.insert(modifiedOrder);
+    orderIndex[modifiedOrder.id] = newIt;
+   
     return true;
 }
 
@@ -337,15 +339,14 @@ double OrderBook::getVWAP() const {
     return totalValue / totalVolume;
 }
 
-
-
 std::multiset<Order>::iterator OrderBook::findOrder(std::multiset<Order>& book, int orderId) {
-    for (auto it = book.begin(); it != book.end(); ++it) {
-        if (it->id == orderId) {
-            return it;
-        }
+    auto indexIt = orderIndex.find(orderId);
+
+    if (indexIt == orderIndex.end()) {
+        return book.end();
     }
-    return book.end();
+
+    return indexIt->second; 
 }
 
 bool OrderBook::canExecuteFillorKill(const Order& order) const {

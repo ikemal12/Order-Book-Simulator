@@ -17,3 +17,8 @@ Maybes
 * Persistence/serialization
 * CLI simulator
 * real-time websockets API
+
+Things to check
+* Are we matching orders by type or by timestamp?
+* Vector vs unordered map for storing and accessing orders
+* for market orders setting quantity to 0

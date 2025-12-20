@@ -7,6 +7,7 @@
 #include "order.h"
 #include "trade.h"
 #include <vector>
+#include <unordered_map>
 
 class OrderBook {
 public:
@@ -52,6 +53,7 @@ private:
 
     // Helper: find order by ID
     std::multiset<Order>::iterator findOrder(std::multiset<Order>& book, int orderId);
+    std::unordered_map<int, std::multiset<Order>::iterator> orderIndex;
 
     // Helper for Fill-or-Kill validation
     bool canExecuteFillorKill(const Order& order) const;
