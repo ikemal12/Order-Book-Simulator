@@ -14,7 +14,7 @@
 * ...
 
 Maybes
-* Persistence/serialization
+* Persistence/serialization 
 * CLI simulator
 * real-time websockets API
 
