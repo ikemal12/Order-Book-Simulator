@@ -1,11 +1,10 @@
-#ifndef ORDER_BOOK_HPP
-#define ORDER_BOOK_HPP
+#pragma once
 
+#include "order.h"
+#include "trade.h"
 #include <set>
 #include <optional>
 #include <iostream>
-#include "order.h"
-#include "trade.h"
 #include <vector>
 #include <unordered_map>
 
@@ -23,12 +22,8 @@ public:
     std::optional<Order> bestBid() const;
     std::optional<Order> bestAsk() const;
 
-    // Print top of the book
-    void printTopOfBook() const;
-
     const std::vector<Trade>& getTrades() const;
     std::vector<Trade> getRecentTrades(int n) const;
-    void printTradeHistory() const;
 
     std::optional<double> getSpread() const;
     int getVolumeAtPrice(double price, bool isBuy) const;
@@ -43,7 +38,6 @@ public:
     int getTotalBidVolume() const;
     int getTotalAskVolume() const;
     int getVolumeInRange(double minPrice, double maxPrice, bool isBuy) const;
-    void printMarketSummary() const;
 
 private:
     std::multiset<Order> bids;  // highest price first
@@ -61,5 +55,3 @@ private:
     void checkStopOrders();
     double getLastTradePrice() const;
 };
-
-#endif 

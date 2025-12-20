@@ -1,4 +1,4 @@
-#include "orderbook.hpp"
+#include "orderbook.h"
 #include <format>
 #include <map>
 #include <cmath>
@@ -52,7 +52,6 @@ void OrderBook::addOrder(const Order& order) {
         int sellOrderId = incomingOrder.isBuy ? it->id : incomingOrder.id;
         Trade trade(buyOrderId, sellOrderId, it->price, tradeQuantity);
         trades.push_back(trade);
-        trade.print();
 
         incomingOrder.quantity -= tradeQuantity;
 
@@ -119,28 +118,6 @@ std::optional<Order> OrderBook::bestAsk() const {
     return *asks.begin();
 }
 
-void OrderBook::printTopOfBook() const {
-    std::cout << "=== Top of Book ===\n";
-
-    auto bid = bestBid();
-    if (bid.has_value()) {
-        std::cout << "Best Bid: ";
-        bid.value().print();
-    } else {
-        std::cout << "Best Bid: None\n";
-    }
-
-    auto ask = bestAsk();
-    if (ask.has_value()) {
-        std::cout << "Best Ask: ";
-        ask.value().print();
-    } else {
-        std::cout << "Best Ask: None\n";
-    }
-
-    std::cout << "===================\n";   
-}
-
 const std::vector<Trade>& OrderBook::getTrades() const {
     return trades;
 }
@@ -158,21 +135,6 @@ std::vector<Trade> OrderBook::getRecentTrades(int n) const {
     }
 
     return recent;
-}
-
-void OrderBook::printTradeHistory() const {
-    std::cout << "\n=== Trade History ===\n";
-    std::cout << std::format("Total trades: {}\n\n", trades.size());
-
-    if (trades.empty()) {
-        std::cout << "No trades executed yet.\n";
-        return;
-    }
-
-    for (const auto& trade : trades) {
-        trade.print();
-    }
-    std::cout << "=====================\n";
 }
 
 std::optional<double> OrderBook::getSpread() const {

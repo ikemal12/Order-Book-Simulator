@@ -1,5 +1,4 @@
-#ifndef ORDER_BOOK_H
-#define ORDER_BOOK_H
+#pragma once
 
 #include <string>
 #include <chrono>
@@ -29,8 +28,6 @@ public:
         timestamp(std::chrono::system_clock::now()),
         stopPrice(stopPrice) {}
 
-    void print() const;
-
     bool operator<(const Order& other) const {
         if (isBuy) {
             return price > other.price || 
@@ -41,5 +38,3 @@ public:
         }
     }
 };
-
-#endif 

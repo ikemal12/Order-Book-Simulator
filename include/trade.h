@@ -1,5 +1,4 @@
-#ifndef TRADE_H
-#define TRADE_H
+#pragma once
 
 #include <chrono>
 #include <format>
@@ -16,8 +15,5 @@ public:
     Trade(int buyOrderId, int sellOrderId, double price, int quantity)
         : buyOrderId(buyOrderId), sellOrderId(sellOrderId), price(price), quantity(quantity),
           timestamp(std::chrono::system_clock::now()) {}
-
-    void print() const;
+          
 };
-
-#endif
