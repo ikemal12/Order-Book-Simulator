@@ -5,6 +5,8 @@
 #include <chrono>
 #include <random>
 #include <format>
+#include <fstream>
+#include <ctime>
 
 void addRandomOrders(OrderBook& book, int numOrders, int threadId) {
     std::random_device rd;
@@ -54,6 +56,14 @@ int main() {
     const int ORDERS_PER_THREAD = 10000;
     const int RUNS_PER_CONFIG = 3;
 
+    std::ofstream logFile("benchmark/results.txt", std::ios::app);
+    auto now = std::chrono::system_clock::now();
+    auto time_t_now = std::chrono::system_clock::to_time_t(now);
+
+    logFile << "\n=== Benchmark Run: " << std::ctime(&time_t_now) << "===\n";
+    logFile << "Orders per thread: " << ORDERS_PER_THREAD << "\n";
+    logFile << "Runs per configuration: " << RUNS_PER_CONFIG << "\n\n";
+
     std::vector<int> threadCounts = {1, 2, 4, 8};
 
     double baselineTime = 0.0;
@@ -79,5 +89,10 @@ int main() {
 
         std::cout << std::format("Threads: {} | Orders: {:>5} | Time: {:.3f}s | Throughput: {:>8.0f} orders/sec | Speedup: {:.2f}x\n",
                                  numThreads, totalOrders, avgTime, ordersPerSecond, speedup);
+        
+        logFile << std::format("Threads: {} | Orders: {:>5} | Time: {:.3f}s | Throughput: {:>8.0f} orders/sec | Speedup: {:.2f}x\n",
+                               numThreads, totalOrders, avgTime, ordersPerSecond, speedup);
     }
+    logFile << "\n";
+    logFile.close();
 }

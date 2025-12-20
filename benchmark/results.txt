@@ -1,0 +1,19 @@
+
+=== Benchmark Run: Sat Dec 20 17:31:45 2025
+===
+Orders per thread: 10000
+Runs per configuration: 3
+
+Threads: 1 | Orders: 10000 | Time: 0.013s | Throughput:   749846 orders/sec | Speedup: 1.00x
+
+
+=== Benchmark Run: Sat Dec 20 17:38:20 2025
+===
+Orders per thread: 10000
+Runs per configuration: 3
+
+Threads: 1 | Orders: 10000 | Time: 0.013s | Throughput:   751968 orders/sec | Speedup: 1.00x
+Threads: 2 | Orders: 20000 | Time: 0.065s | Throughput:   309429 orders/sec | Speedup: 0.21x
+Threads: 4 | Orders: 40000 | Time: 0.135s | Throughput:   297238 orders/sec | Speedup: 0.10x
+Threads: 8 | Orders: 80000 | Time: 0.275s | Throughput:   291202 orders/sec | Speedup: 0.05x
+
