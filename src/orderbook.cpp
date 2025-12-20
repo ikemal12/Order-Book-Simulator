@@ -2,8 +2,10 @@
 #include <format>
 #include <map>
 #include <cmath>
+#include <mutex>
 
 void OrderBook::addOrder(const Order& order) {
+    std::unique_lock<std::shared_mutex> lock(mtx);
     Order incomingOrder = order;
 
     if (incomingOrder.type == OrderType::STOP_LOSS) {
@@ -85,6 +87,7 @@ void OrderBook::addOrder(const Order& order) {
 }
 
 bool OrderBook::cancelOrder(int orderId) {
+    std::unique_lock<std::shared_mutex> lock(mtx);
     auto indexIt = orderIndex.find(orderId);
 
     if (indexIt == orderIndex.end()) {
@@ -105,6 +108,8 @@ bool OrderBook::cancelOrder(int orderId) {
 }
 
 std::optional<Order> OrderBook::bestBid() const {
+    std::shared_lock<std::shared_mutex> lock(mtx);
+
     if (bids.empty()) {
         return std::nullopt;
     }
@@ -112,6 +117,8 @@ std::optional<Order> OrderBook::bestBid() const {
 }
 
 std::optional<Order> OrderBook::bestAsk() const {
+    std::shared_lock<std::shared_mutex> lock(mtx);
+
     if (asks.empty()) {
         return std::nullopt;
     }
@@ -138,6 +145,8 @@ std::vector<Trade> OrderBook::getRecentTrades(int n) const {
 }
 
 std::optional<double> OrderBook::getSpread() const {
+    std::shared_lock<std::shared_mutex> lock(mtx);
+
     auto bid = bestBid();
     auto ask = bestAsk();
 
@@ -162,6 +171,7 @@ int OrderBook::getVolumeAtPrice(double price, bool isBuy) const {
 }
 
 void OrderBook::printDepth(int levels) const {
+    std::shared_lock<std::shared_mutex> lock(mtx);
     std::cout << "\n=== Order Book Depth ===\n";
 
     // Aggregate orders by price
@@ -220,6 +230,7 @@ void OrderBook::printDepth(int levels) const {
 }
 
 bool OrderBook::modifyOrder(int orderId, std::optional<double> newPrice, std::optional<int> newQuantity) {
+    std::unique_lock<std::shared_mutex> lock(mtx);
     auto indexIt = orderIndex.find(orderId);
 
     if (indexIt == orderIndex.end()) {
@@ -251,6 +262,8 @@ bool OrderBook::modifyOrder(int orderId, std::optional<double> newPrice, std::op
 }
 
 std::optional<double> OrderBook::getMidPrice() const {
+    std::shared_lock<std::shared_mutex> lock(mtx);
+
     auto bid = bestBid();
     auto ask = bestAsk();
 
@@ -277,6 +290,8 @@ int OrderBook::getTotalAskVolume() const {
 }
 
 double OrderBook::getOrderBookImbalance() const {
+    std::shared_lock<std::shared_mutex> lock(mtx);
+
     int bidVol = getTotalBidVolume();
     int askVol = getTotalAskVolume();
 
@@ -288,6 +303,8 @@ double OrderBook::getOrderBookImbalance() const {
 }
 
 double OrderBook::getVWAP() const {
+    std::shared_lock<std::shared_mutex> lock(mtx);
+
     if (trades.empty()) {
         return 0.0;
     }

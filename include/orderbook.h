@@ -7,15 +7,13 @@
 #include <iostream>
 #include <vector>
 #include <unordered_map>
+#include <shared_mutex>
 
 class OrderBook {
 public:
     OrderBook() = default;
 
-    // Add new order to book
     void addOrder(const Order& order);
-
-    // Remove an order by ID
     bool cancelOrder(int orderId);
 
     // Get best bid and best ask
@@ -44,6 +42,7 @@ private:
     std::multiset<Order> asks;  // lowest price first
     std::vector<Trade> trades;
     std::vector<Order> stopOrders;
+    mutable std::shared_mutex mtx;
 
     // Helper: find order by ID
     std::multiset<Order>::iterator findOrder(std::multiset<Order>& book, int orderId);
