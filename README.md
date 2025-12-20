@@ -8,8 +8,8 @@
 * Levels, full book display (done)
 * Order modification (done)
 * Different types eg. Stop Loss, FOK, Immediate-or-Cancel (done)
-* Market data/stats eg mid, VWAP, ratio, volume (doing)
-* Performance optimisation eg multithreading, memory pool allocation
+* Market data/stats eg mid, VWAP, ratio, volume (done)
+* Performance optimisations eg thread safety, memory pooling (doing)
 * Testing/benchmarking
 * ...
 
@@ -20,5 +20,8 @@ Maybes
 
 Things to check
 * Are we matching orders by type or by timestamp?
-* Vector vs unordered map for storing and accessing orders
+    * Currently matching by price-time priority (timestamp secondary, ie. order type does not affect matching order)
+* Vector vs unordered map for storing and accessing orders?
+    * currently using multiset for storing and unordered_map for lookup
 * for market orders setting quantity to 0
+    * no, but need to fix matching logic

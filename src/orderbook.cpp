@@ -27,7 +27,13 @@ void OrderBook::addOrder(const Order& order) {
     auto it = matchAgainst.begin();
     while (it != matchAgainst.end() && incomingOrder.quantity > 0) {
         bool canMatch = false;
-        if (incomingOrder.isBuy) {
+        
+        // Market orders always match at any price
+        if (incomingOrder.type == OrderType::MARKET) {
+            canMatch = true;
+        }
+        // Limit orders check price compatibility
+        else if (incomingOrder.isBuy) {
             canMatch = (incomingOrder.price >= it->price);
         } else {
             canMatch = (incomingOrder.price <= it->price);
