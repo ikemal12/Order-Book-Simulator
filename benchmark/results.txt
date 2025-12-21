@@ -28,3 +28,23 @@ Threads: 2 | Operations:  2000 | Time: 0.004s | Throughput:   451372 operations/
 Threads: 4 | Operations:  4000 | Time: 0.009s | Throughput:   445956 operations/sec | Speedup: 0.13x
 Threads: 8 | Operations:  8000 | Time: 0.020s | Throughput:   400893 operations/sec | Speedup: 0.06x
 
+
+=== Benchmark Run: Sun Dec 21 16:05:39 2025
+===
+Runs per configuration: 3
+
+Operations:    1000 | Time: 0.0012s | Throughput:     825718 operations/sec
+Operations:   10000 | Time: 0.0099s | Throughput:    1011514 operations/sec
+Operations:  100000 | Time: 0.1084s | Throughput:     922804 operations/sec
+Operations: 1000000 | Time: 1.1441s | Throughput:     874049 operations/sec
+
+
+=== Benchmark Run: Sun Dec 21 16:07:09 2025
+===
+Runs per configuration: 3
+
+Operations:    1000 | Time: 0.0008s | Throughput:    1295001 operations/sec
+Operations:   10000 | Time: 0.0098s | Throughput:    1019981 operations/sec
+Operations:  100000 | Time: 0.0921s | Throughput:    1085897 operations/sec
+Operations: 1000000 | Time: 0.8604s | Throughput:    1162280 operations/sec
+

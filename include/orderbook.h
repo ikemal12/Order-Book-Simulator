@@ -7,7 +7,6 @@
 #include <iostream>
 #include <vector>
 #include <unordered_map>
-#include <shared_mutex>
 
 class OrderBook {
 public:
@@ -15,8 +14,8 @@ public:
 
     void addOrder(const Order& order);
     bool cancelOrder(int orderId);
+    bool modifyOrder(int orderId, std::optional<double> newPrice, std::optional<int> newQuantity);
 
-    // Get best bid and best ask
     std::optional<Order> bestBid() const;
     std::optional<Order> bestAsk() const;
 
@@ -27,9 +26,6 @@ public:
     int getVolumeAtPrice(double price, bool isBuy) const;
     void printDepth(int levels = 5) const;
 
-    bool modifyOrder(int orderId, std::optional<double> newPrice, std::optional<int> newQuantity);
-
-    // stats
     std::optional<double> getMidPrice() const;
     double getVWAP() const;
     double getOrderBookImbalance() const;
@@ -42,15 +38,10 @@ private:
     std::multiset<Order> asks;  // lowest price first
     std::vector<Trade> trades;
     std::vector<Order> stopOrders;
-    mutable std::shared_mutex mtx;
-
-    // Helper: find order by ID
-    std::multiset<Order>::iterator findOrder(std::multiset<Order>& book, int orderId);
     std::unordered_map<int, std::multiset<Order>::iterator> orderIndex;
 
-    // Helper for Fill-or-Kill validation
-    bool canExecuteFillorKill(const Order& order) const;
-
+    std::multiset<Order>::iterator findOrder(std::multiset<Order>& book, int orderId);
+    bool canExecuteFillorKill(const Order& order) const; // Helper for Fill-or-Kill validation
     void checkStopOrders();
     double getLastTradePrice() const;
 };

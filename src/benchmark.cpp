@@ -1,6 +1,5 @@
 #include "orderbook.h"
 #include <iostream>
-#include <thread>
 #include <vector>
 #include <chrono>
 #include <random>
@@ -40,11 +39,6 @@ void mixedWorkload(OrderBook& book, int numOperations, int threadId) {
     int baseId = threadId * 100000;
 
     for (int i = 0; i < numOperations; ++i) {
-        if (i % 1000 == 0 && threadId == 0) {  // Only thread 0 prints
-            std::cout << ".";  // Progress indicator
-            std::cout.flush();
-        }
-        
         int operationType = operationDist(gen);
 
         if (operationType <= 20) {
@@ -66,7 +60,7 @@ void mixedWorkload(OrderBook& book, int numOperations, int threadId) {
     }
 }
 
-double runBenchmark(int numThreads, int operationsPerThread) {
+double runBenchmark(int numOperations) {
     OrderBook book;
 
     // pre-populate
@@ -75,21 +69,8 @@ double runBenchmark(int numThreads, int operationsPerThread) {
     }
 
     auto start = std::chrono::high_resolution_clock::now();
-
-    if (numThreads == 1) {
-        //addRandomOrders(book, ordersPerThread, 0);
-        mixedWorkload(book, operationsPerThread, 0);
-    } else {
-        std::vector<std::thread> threads;
-
-        for (int i = 0; i < numThreads; ++i) {
-            threads.emplace_back(mixedWorkload, std::ref(book), operationsPerThread, i);
-        }
-
-        for (auto& t : threads) {
-            t.join();
-        }
-    }
+    
+    mixedWorkload(book, numOperations, 0);
 
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = end - start;
@@ -97,7 +78,7 @@ double runBenchmark(int numThreads, int operationsPerThread) {
 }
 
 int main() {
-    const int OPERATIONS_PER_THREAD = 1000;
+    std::vector<int> OPERATION_COUNTS = {1000, 10000, 100000, 1000000};
     const int RUNS_PER_CONFIG = 3;
 
     std::ofstream logFile("benchmark/results.txt", std::ios::app);
@@ -105,37 +86,27 @@ int main() {
     auto time_t_now = std::chrono::system_clock::to_time_t(now);
 
     logFile << "\n=== Benchmark Run: " << std::ctime(&time_t_now) << "===\n";
-    logFile << "Operations per thread: " << OPERATIONS_PER_THREAD << "\n";
     logFile << "Runs per configuration: " << RUNS_PER_CONFIG << "\n\n";
-
-    std::vector<int> threadCounts = {1, 2, 4, 8};
 
     double baselineTime = 0.0;
 
-    for (int numThreads : threadCounts) {
+    for (int numOperations : OPERATION_COUNTS) {
         double totalTime = 0.0;
 
         // run multiple times and average
         for (int run = 0; run < RUNS_PER_CONFIG; ++run) {
-            double time = runBenchmark(numThreads, OPERATIONS_PER_THREAD);
+            double time = runBenchmark(numOperations);
             totalTime += time;
         }
 
         double avgTime = totalTime / RUNS_PER_CONFIG;
-        int totalOperations = numThreads * OPERATIONS_PER_THREAD;
-        double operationsPerSecond = totalOperations / avgTime;
+        double operationsPerSecond = numOperations / avgTime;
 
-        if (numThreads == 1) {
-            baselineTime = avgTime;
-        }
-
-        double speedup = baselineTime / avgTime;
-
-        std::cout << std::format("Threads: {} | Operations: {:>5} | Time: {:.3f}s | Throughput: {:>8.0f} operations/sec | Speedup: {:.2f}x\n",
-                                 numThreads, totalOperations, avgTime, operationsPerSecond, speedup);
+        std::cout << std::format("Operations: {:>7} | Time: {:.4f}s | Throughput: {:>10.0f} operations/sec\n",
+                                 numOperations, avgTime, operationsPerSecond);
         
-        logFile << std::format("Threads: {} | Operations: {:>5} | Time: {:.3f}s | Throughput: {:>8.0f} operations/sec | Speedup: {:.2f}x\n",
-                               numThreads, totalOperations, avgTime, operationsPerSecond, speedup);
+        logFile << std::format("Operations: {:>7} | Time: {:.4f}s | Throughput: {:>10.0f} operations/sec\n",
+                               numOperations, avgTime, operationsPerSecond);
     }
     logFile << "\n";
     logFile.close();
