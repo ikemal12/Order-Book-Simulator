@@ -17,3 +17,14 @@ Threads: 2 | Orders: 20000 | Time: 0.065s | Throughput:   309429 orders/sec | Sp
 Threads: 4 | Orders: 40000 | Time: 0.135s | Throughput:   297238 orders/sec | Speedup: 0.10x
 Threads: 8 | Orders: 80000 | Time: 0.275s | Throughput:   291202 orders/sec | Speedup: 0.05x
 
+
+=== Benchmark Run: Sun Dec 21 14:12:44 2025
+===
+Operations per thread: 1000
+Runs per configuration: 3
+
+Threads: 1 | Operations:  1000 | Time: 0.001s | Throughput:   835631 operations/sec | Speedup: 1.00x
+Threads: 2 | Operations:  2000 | Time: 0.004s | Throughput:   451372 operations/sec | Speedup: 0.27x
+Threads: 4 | Operations:  4000 | Time: 0.009s | Throughput:   445956 operations/sec | Speedup: 0.13x
+Threads: 8 | Operations:  8000 | Time: 0.020s | Throughput:   400893 operations/sec | Speedup: 0.06x
+

@@ -147,14 +147,11 @@ std::vector<Trade> OrderBook::getRecentTrades(int n) const {
 std::optional<double> OrderBook::getSpread() const {
     std::shared_lock<std::shared_mutex> lock(mtx);
 
-    auto bid = bestBid();
-    auto ask = bestAsk();
-
-    if (bid.has_value() && ask.has_value()) {
-        return ask->price - bid->price;
-    } else {
+    if (bids.empty() || asks.empty()) {
         return std::nullopt;
     }
+
+    return asks.begin()->price - bids.begin()->price;
 }
 
 int OrderBook::getVolumeAtPrice(double price, bool isBuy) const {
@@ -264,13 +261,11 @@ bool OrderBook::modifyOrder(int orderId, std::optional<double> newPrice, std::op
 std::optional<double> OrderBook::getMidPrice() const {
     std::shared_lock<std::shared_mutex> lock(mtx);
 
-    auto bid = bestBid();
-    auto ask = bestAsk();
+    if (bids.empty() || asks.empty()) {
+        return std::nullopt;
+    }
 
-    if (bid.has_value() && ask.has_value()) {
-        return (bid->price + ask->price) / 2.0;
-    } 
-    return std::nullopt;
+    return (bids.begin()->price + asks.begin()->price) / 2.0;
 }
 
 int OrderBook::getTotalBidVolume() const {

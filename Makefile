@@ -15,7 +15,7 @@ clean:
 run: all
 	./$(TARGET)
 
-benchmark: src/benchmark.cpp src/orderbook.cpp 
-	$(CXX) $(CXXFLAGS) src/benchmark.cpp src/orderbook.cpp -o benchmark $(LDFLAGS)
+bench: src/benchmark.cpp src/orderbook.cpp 
+	$(CXX) $(CXXFLAGS) src/benchmark.cpp src/orderbook.cpp -o bench $(LDFLAGS)
 
-.PHONY: all clean run benchmark
+.PHONY: all clean run bench
