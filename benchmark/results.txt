@@ -57,3 +57,12 @@ Operations:   10000 | Time: 0.0105s | Throughput:     951261 operations/sec
 Operations:  100000 | Time: 0.0862s | Throughput:    1159870 operations/sec
 Operations: 1000000 | Time: 0.8763s | Throughput:    1141148 operations/sec
 
+
+=== Benchmark Run: Wed Dec 31 20:30:11 2025
+Runs per configuration: 3
+
+Operations:    1000 | Time: 0.0001s | Throughput:   18094089 operations/sec
+Operations:   10000 | Time: 0.0006s | Throughput:   17891221 operations/sec
+Operations:  100000 | Time: 0.0066s | Throughput:   15155036 operations/sec
+Operations: 1000000 | Time: 0.0867s | Throughput:   11533985 operations/sec
+

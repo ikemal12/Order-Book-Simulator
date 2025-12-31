@@ -1,8 +1,5 @@
 #pragma once
-#include <string>
 #include <chrono>
-#include <format>
-#include <iostream>
 
 enum class OrderType {
     MARKET,
@@ -27,7 +24,7 @@ public:
         timestamp(std::chrono::system_clock::now()),
         stopPrice(stopPrice) {}
 
-    bool operator<(const Order& other) const {
+    bool operator<(const Order& other) const noexcept {
         if (isBuy) {
             return price > other.price || 
                 (price == other.price && timestamp < other.timestamp);
