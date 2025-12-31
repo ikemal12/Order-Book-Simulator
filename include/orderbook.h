@@ -18,15 +18,15 @@ public:
     void addOrder(const Order& order);
     bool cancelOrder(int orderId);
     bool modifyOrder(int orderId, std::optional<double> newPrice, std::optional<int> newQuantity);
-    std::optional<Order> bestBid() const;
-    std::optional<Order> bestAsk() const;
-    std::vector<Trade> getRecentTrades(int n) const;
-    std::optional<double> getSpread() const;
-    int getVolumeAtPrice(double price, bool isBuy) const;
+    [[nodiscard]] std::optional<Order> bestBid() const noexcept;
+    [[nodiscard]] std::optional<Order> bestAsk() const noexcept;
+    [[nodiscard]] std::vector<Trade> getRecentTrades(int n) const noexcept;
+    [[nodiscard]] std::optional<double> getSpread() const noexcept;
+    int getVolumeAtPrice(double price, bool isBuy) const noexcept;
     void printDepth(int levels = 5) const;
-    std::optional<double> getMidPrice() const;
-    double getVWAP() const;
-    VolumeInfo getVolumeInfo() const;
+    [[nodiscard]] std::optional<double> getMidPrice() const noexcept;
+    [[nodiscard]] double getVWAP() const noexcept;
+    [[nodiscard]] VolumeInfo getVolumeInfo() const noexcept;
 
 private:
     std::multiset<Order> bids;  // highest price first
@@ -34,7 +34,7 @@ private:
     std::vector<Trade> trades;
     std::vector<Order> stopOrders;
     std::unordered_map<int, std::multiset<Order>::iterator> orderIndex;
-    bool canExecuteFillorKill(const Order& order) const;
+    bool canExecuteFillorKill(const Order& order) const noexcept;
     void checkStopOrders();
-    double getLastTradePrice() const;
+    double getLastTradePrice() const noexcept;
 };
