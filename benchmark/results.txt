@@ -66,3 +66,21 @@ Operations:   10000 | Time: 0.0006s | Throughput:   17891221 operations/sec
 Operations:  100000 | Time: 0.0066s | Throughput:   15155036 operations/sec
 Operations: 1000000 | Time: 0.0867s | Throughput:   11533985 operations/sec
 
+
+=== Benchmark Run: Wed Dec 31 21:13:01 2025
+Runs per configuration: 3
+
+Operations:    1000 | Time: 0.0002s | Throughput:    5287275 operations/sec
+Operations:   10000 | Time: 0.0014s | Throughput:    6974473 operations/sec
+Operations:  100000 | Time: 0.0183s | Throughput:    5456083 operations/sec
+Operations: 1000000 | Time: 0.2065s | Throughput:    4842116 operations/sec
+
+
+=== Benchmark Run: Wed Dec 31 21:44:20 2025
+Runs per configuration: 3
+
+Operations:    1000 | Time: 0.0002s | Throughput:    4347196 operations/sec
+Operations:   10000 | Time: 0.0021s | Throughput:    4858378 operations/sec
+Operations:  100000 | Time: 0.0200s | Throughput:    4990161 operations/sec
+Operations: 1000000 | Time: 0.1987s | Throughput:    5031849 operations/sec
+

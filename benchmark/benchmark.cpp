@@ -23,13 +23,13 @@ void runWorkload(OrderBook& book, int numOperations, int threadId, int writePerc
             book.addOrder(order);
         } else { // reads
             if (operationType <= 40) {
-                book.bestBid();
+                (void)book.bestBid();
             } else if (operationType <= 60) {
-                book.bestAsk();
+                (void)book.bestAsk();
             } else if (operationType <= 80) {
-                book.getMidPrice();
+                (void)book.getMidPrice();
             } else {
-                book.getSpread();
+                (void)book.getSpread();
             }
         }
     }

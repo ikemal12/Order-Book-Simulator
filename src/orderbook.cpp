@@ -71,26 +71,26 @@ bool OrderBook::cancelOrder(int orderId) {
     return true; 
 }
 
-std::optional<Order> OrderBook::bestBid() const {
+std::optional<Order> OrderBook::bestBid() const noexcept {
     if (bids.empty()) {
         return std::nullopt;
     }
     return *bids.begin();
 }
 
-std::optional<Order> OrderBook::bestAsk() const {
+std::optional<Order> OrderBook::bestAsk() const noexcept {
     if (asks.empty()) {
         return std::nullopt;
     }
     return *asks.begin();
 }
 
-std::vector<Trade> OrderBook::getRecentTrades(int n) const {
+std::vector<Trade> OrderBook::getRecentTrades(int n) const noexcept {
     size_t count = std::min(static_cast<size_t>(n), trades.size());
     return std::vector<Trade>(trades.end() - count, trades.end());
 }
 
-std::optional<double> OrderBook::getSpread() const {
+std::optional<double> OrderBook::getSpread() const noexcept {
     if (bids.empty() || asks.empty()) {
         return std::nullopt;
     }
@@ -149,14 +149,14 @@ bool OrderBook::modifyOrder(int orderId, std::optional<double> newPrice, std::op
     return true;
 }
 
-std::optional<double> OrderBook::getMidPrice() const {
+std::optional<double> OrderBook::getMidPrice() const noexcept {
     if (bids.empty() || asks.empty()) {
         return std::nullopt;
     }
     return (bids.begin()->price + asks.begin()->price) / 2.0;
 }
 
-VolumeInfo OrderBook::getVolumeInfo() const {
+VolumeInfo OrderBook::getVolumeInfo() const noexcept {
     int bidVol = 0, askVol = 0;
     for (const auto& order : bids) bidVol += order.quantity;
     for (const auto& order : asks) askVol += order.quantity;
@@ -164,7 +164,7 @@ VolumeInfo OrderBook::getVolumeInfo() const {
     return {bidVol, askVol, imbalance};
 }
 
-double OrderBook::getVWAP() const {
+double OrderBook::getVWAP() const noexcept {
     if (trades.empty()) {
         return 0.0;
     }
@@ -181,7 +181,7 @@ double OrderBook::getVWAP() const {
     return totalValue / totalVolume;
 }
 
-bool OrderBook::canExecuteFillorKill(const Order& order) const {
+bool OrderBook::canExecuteFillorKill(const Order& order) const noexcept {
     const std::multiset<Order>& matchAgainst = order.isBuy ? asks : bids;
     int availableQuantity = 0;
     for (const auto& existingOrder : matchAgainst) {
@@ -200,7 +200,7 @@ bool OrderBook::canExecuteFillorKill(const Order& order) const {
     return false; 
 }
 
-double OrderBook::getLastTradePrice() const {
+double OrderBook::getLastTradePrice() const noexcept {
     if (trades.empty()) {
         return 0.0; 
     }
