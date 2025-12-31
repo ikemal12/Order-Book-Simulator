@@ -1,5 +1,4 @@
 #pragma once
-
 #include <string>
 #include <chrono>
 #include <format>
@@ -23,7 +22,7 @@ public:
     OrderType type;
     double stopPrice; // trigger price for stop orders
 
-    Order(int id, double price, int quantity, bool isBuy, OrderType type = OrderType::LIMIT, double stopPrice = 0.0)
+    explicit Order(int id, double price, int quantity, bool isBuy, OrderType type = OrderType::LIMIT, double stopPrice = 0.0)
         : id(id), price(price), quantity(quantity), isBuy(isBuy), type(type), 
         timestamp(std::chrono::system_clock::now()),
         stopPrice(stopPrice) {}
