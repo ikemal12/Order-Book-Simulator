@@ -37,4 +37,6 @@ private:
     bool canExecuteFillorKill(const Order& order) const noexcept;
     void checkStopOrders();
     double getLastTradePrice() const noexcept;
+    int totalBidVolume = 0;
+    int totalAskVolume = 0;
 };

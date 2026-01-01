@@ -20,10 +20,10 @@ void OrderBook::addOrder(const Order& order) {
     auto it = matchAgainst.begin();
     while (it != matchAgainst.end() && incomingOrder.quantity > 0) {
         bool canMatch = false;
-        if (incomingOrder.type == OrderType::MARKET) { // Market orders always match at any price
+        if (incomingOrder.type == OrderType::MARKET) { 
             canMatch = true;
         }
-        else if (incomingOrder.isBuy) { // Limit orders check price compatibility
+        else if (incomingOrder.isBuy) { 
             canMatch = (incomingOrder.price >= it->price);
         } else {
             canMatch = (incomingOrder.price <= it->price);
@@ -37,6 +37,12 @@ void OrderBook::addOrder(const Order& order) {
         int sellOrderId = incomingOrder.isBuy ? it->id : incomingOrder.id;
         Trade trade(buyOrderId, sellOrderId, it->price, tradeQuantity);
         trades.push_back(trade);
+
+        if (it->isBuy) {
+            totalBidVolume -= tradeQuantity;
+        } else {
+            totalAskVolume -= tradeQuantity;
+        }
 
         incomingOrder.quantity -= tradeQuantity;
         Order modifiedOrder = *it;
@@ -57,6 +63,12 @@ void OrderBook::addOrder(const Order& order) {
         }
         auto it = incomingOrder.isBuy ? bids.insert(incomingOrder) : asks.insert(incomingOrder);
         orderIndex[incomingOrder.id] = it;
+
+        if (incomingOrder.isBuy) {
+            totalBidVolume += incomingOrder.quantity;
+        } else {
+            totalAskVolume += incomingOrder.quantity;
+        }
     }
     checkStopOrders();
 }
@@ -66,6 +78,14 @@ bool OrderBook::cancelOrder(int orderId) {
     if (indexIt == orderIndex.end()) {
         return false;
     }
+
+    const Order& order = *(indexIt->second);
+    if (order.isBuy) {
+        totalBidVolume -= order.quantity;
+    } else {
+        totalAskVolume -= order.quantity;
+    }
+
     (indexIt->second->isBuy ? bids : asks).erase(indexIt->second);
     orderIndex.erase(indexIt);
     return true; 
@@ -133,6 +153,8 @@ bool OrderBook::modifyOrder(int orderId, std::optional<double> newPrice, std::op
     auto it = indexIt->second;
     std::multiset<Order>& book = it->isBuy ? bids : asks;
     Order modifiedOrder = *it;
+    int oldQuantity = modifiedOrder.quantity;
+    
     if (newPrice.has_value()) {
         modifiedOrder.price = newPrice.value();
     }
@@ -141,7 +163,13 @@ bool OrderBook::modifyOrder(int orderId, std::optional<double> newPrice, std::op
         modifiedOrder.quantity = newQuantity.value();
     }
 
-    modifiedOrder.timestamp = std::chrono::system_clock::now(); // update timestamp
+    if (modifiedOrder.isBuy) {
+        totalBidVolume = totalBidVolume - oldQuantity + modifiedOrder.quantity;
+    } else {
+        totalAskVolume = totalAskVolume - oldQuantity + modifiedOrder.quantity;
+    }
+
+    modifiedOrder.timestamp = std::chrono::system_clock::now(); 
     orderIndex.erase(indexIt);
     book.erase(it);
     auto newIt = book.insert(modifiedOrder);
@@ -157,11 +185,10 @@ std::optional<double> OrderBook::getMidPrice() const noexcept {
 }
 
 VolumeInfo OrderBook::getVolumeInfo() const noexcept {
-    int bidVol = 0, askVol = 0;
-    for (const auto& order : bids) bidVol += order.quantity;
-    for (const auto& order : asks) askVol += order.quantity;
-    double imbalance = (askVol == 0) ? (bidVol > 0 ? 999.0 : 1.0) : static_cast<double>(bidVol) / askVol;
-    return {bidVol, askVol, imbalance};
+    double imbalance = (totalAskVolume == 0) ? 
+        (totalBidVolume > 0 ? 999.0 : 1.0) : 
+        static_cast<double>(totalBidVolume) / totalAskVolume;
+    return {totalBidVolume, totalAskVolume, imbalance};
 }
 
 double OrderBook::getVWAP() const noexcept {
