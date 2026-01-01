@@ -18,34 +18,34 @@ static void BM_AddOrder(benchmark::State& state) {
 BENCHMARK(BM_AddOrder);
 
 static void BM_CancelOrder(benchmark::State& state) {
-    int nextId = 0;
+    OrderBook book;
+    for (int i = 0; i < 1000; ++i) {
+        book.addOrder(Order(i, 100.0 + i*0.01, 10, true, OrderType::LIMIT));
+    }
+    int idToCancel = 500;
     for (auto _ : state) {
-        state.PauseTiming();  
-        OrderBook book;
-        for (int i = 0; i < 100; ++i) {
-            book.addOrder(Order(nextId + i, 100.0 + i*0.01, 10, true, OrderType::LIMIT));
-        }
-        int idToCancel = nextId + 50; 
-        state.ResumeTiming();  
+        state.PauseTiming();
+        book.addOrder(Order(idToCancel, 105.0, 10, true, OrderType::LIMIT));
+        state.ResumeTiming();
         book.cancelOrder(idToCancel);
-        nextId += 100;  
     }
     state.SetItemsProcessed(state.iterations());
 }
 BENCHMARK(BM_CancelOrder);
 
 static void BM_ModifyOrder(benchmark::State& state) {
-    int nextId = 0;
+    OrderBook book;
+    for (int i = 0; i < 1000; ++i) {
+            book.addOrder(Order(i, 100.0 + i*0.01, 10, true, OrderType::LIMIT));
+    }
+    int idToModify = 500;
+    double newPrice = 101.0;
+    int newQuantity = 20;
+
     for (auto _ : state) {
-        state.PauseTiming();
-        OrderBook book;
-        for (int i = 0; i < 100; ++i) {
-            book.addOrder(Order(nextId + i, 100.0 + i*0.01, 10, true, OrderType::LIMIT));
-        }
-        int idToModify = nextId + 50;
-        state.ResumeTiming();
-        book.modifyOrder(idToModify, 101.0, 20);  
-        nextId += 100;
+        book.modifyOrder(idToModify, newPrice, newQuantity);  
+        newPrice = (newPrice == 101.0) ? 102.0 : 101.0;
+        newQuantity = (newQuantity == 20) ? 30 : 20;
     }
     state.SetItemsProcessed(state.iterations());
 }
