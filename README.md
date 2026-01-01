@@ -23,7 +23,7 @@ I used Google Benchmark to measure the performance of each operation individuall
 
 ```bash
 # clone repository
-git clone https://github.com/yourusername/Order-Book-Simulator.git
+git clone https://github.com/ikemal12/Order-Book-Simulator.git
 cd Order-Book-Simulator
 
 # install google benchmark (first go to a directory outside the project)
