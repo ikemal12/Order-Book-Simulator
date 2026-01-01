@@ -4,6 +4,10 @@ LDFLAGS = -lstdc++exp
 
 TARGET = orderbook 
 
+BENCHMARK_DIR = $(HOME)/Dev/google-benchmark
+BENCHMARK_LIB = $(BENCHMARK_DIR)/src/libbenchmark.a
+CXXFLAGS += -I$(BENCHMARK_DIR)/include -DBENCHMARK_STATIC_DEFINE
+
 all: $(TARGET)
 
 $(TARGET): src/main.cpp src/orderbook.cpp 
@@ -18,8 +22,7 @@ run: all
 bench: benchmark/benchmark.cpp src/orderbook.cpp 
 	$(CXX) $(CXXFLAGS) benchmark/benchmark.cpp src/orderbook.cpp -o bench $(LDFLAGS)
 
-.PHONY: all clean run bench
+google-bench: benchmark/google_benchmark.cpp src/orderbook.cpp
+	$(CXX) $(CXXFLAGS) benchmark/google_benchmark.cpp src/orderbook.cpp -o google-bench $(BENCHMARK_LIB) -lpthread -lstdc++exp -lshlwapi
 
-BENCHMARK_DIR = $(HOME)/Dev/google-benchmark
-CXXFLAGS += -I$(BENCHMARK_DIR)/include
-LDFLAGS += -L$(BENCHMARK_DIR)/src -lbenchmark -lpthread
+.PHONY: all clean run bench google-bench
