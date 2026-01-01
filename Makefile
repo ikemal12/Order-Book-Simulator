@@ -19,3 +19,7 @@ bench: benchmark/benchmark.cpp src/orderbook.cpp
 	$(CXX) $(CXXFLAGS) benchmark/benchmark.cpp src/orderbook.cpp -o bench $(LDFLAGS)
 
 .PHONY: all clean run bench
+
+BENCHMARK_DIR = $(HOME)/Dev/google-benchmark
+CXXFLAGS += -I$(BENCHMARK_DIR)/include
+LDFLAGS += -L$(BENCHMARK_DIR)/src -lbenchmark -lpthread
