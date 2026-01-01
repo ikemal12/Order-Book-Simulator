@@ -84,3 +84,61 @@ Operations:   10000 | Time: 0.0021s | Throughput:    4858378 operations/sec
 Operations:  100000 | Time: 0.0200s | Throughput:    4990161 operations/sec
 Operations: 1000000 | Time: 0.1987s | Throughput:    5031849 operations/sec
 
+-----------------------------------------------------------------------------
+Benchmark                   Time             CPU   Iterations UserCounters...
+-----------------------------------------------------------------------------
+BM_AddOrder              2823 ns         2790 ns       224000 items_per_second=358.4k/s
+BM_CancelOrder           2343 ns         2176 ns       280000 items_per_second=459.487k/s
+BM_ModifyOrder           2012 ns         2051 ns       373333 items_per_second=487.619k/s
+BM_BestBid               41.2 ns         41.5 ns     15448276 items_per_second=24.1144M/s
+BM_BestAsk               46.5 ns         43.5 ns     17230769 items_per_second=22.9744M/s
+BM_GetSpread             69.9 ns         68.4 ns     11200000 items_per_second=14.6286M/s
+BM_GetMidPrice           76.5 ns         71.1 ns     11200000 items_per_second=14.0549M/s
+BM_GetVolumeInfo         7.89 ns         7.32 ns     89600000 items_per_second=136.533M/s
+BM_GetVWAP                719 ns          688 ns      1000000 items_per_second=1.45455M/s
+BM_GetRecentTrades        226 ns          222 ns      3446154 items_per_second=4.5011M/s
+
+=== Benchmark Run: Thu, Jan  1, 2026  3:19:39 PM ===
+-----------------------------------------------------------------------------
+Benchmark                   Time             CPU   Iterations UserCounters...
+-----------------------------------------------------------------------------
+BM_AddOrder              3786 ns         3690 ns       194783 items_per_second=271.002k/s
+BM_CancelOrder           2628 ns         2344 ns       320000 items_per_second=426.667k/s
+BM_ModifyOrder           2051 ns         2002 ns       320000 items_per_second=499.512k/s
+BM_BestBid               44.8 ns         43.9 ns     16000000 items_per_second=22.7556M/s
+BM_BestAsk               42.2 ns         41.4 ns     16592593 items_per_second=24.1347M/s
+BM_GetSpread             70.5 ns         68.0 ns      8960000 items_per_second=14.7036M/s
+BM_GetMidPrice            110 ns          105 ns      6400000 items_per_second=9.52558M/s
+BM_GetVolumeInfo         7.91 ns         7.81 ns    112000000 items_per_second=128M/s
+BM_GetVWAP                723 ns          698 ns      1120000 items_per_second=1.4336M/s
+BM_GetRecentTrades        236 ns          241 ns      2986667 items_per_second=4.15536M/s
+
+=== Benchmark Run: Thu, Jan  1, 2026  3:22:34 PM ===
+-----------------------------------------------------------------------------
+Benchmark                   Time             CPU   Iterations UserCounters...
+-----------------------------------------------------------------------------
+BM_AddOrder              3707 ns         3575 ns       179200 items_per_second=279.727k/s
+BM_CancelOrder           2503 ns         2393 ns       320000 items_per_second=417.959k/s
+BM_ModifyOrder           1991 ns         1904 ns       344615 items_per_second=525.128k/s
+BM_BestBid               41.3 ns         39.9 ns     17230769 items_per_second=25.0629M/s
+BM_BestAsk               42.2 ns         42.5 ns     16185806 items_per_second=23.543M/s
+BM_GetSpread             69.2 ns         68.4 ns     11200000 items_per_second=14.6286M/s
+BM_GetMidPrice            123 ns          122 ns      6400000 items_per_second=8.192M/s
+BM_GetVolumeInfo         7.40 ns         7.15 ns     89600000 items_per_second=139.863M/s
+BM_GetVWAP                696 ns          684 ns      1120000 items_per_second=1.46286M/s
+BM_GetRecentTrades        219 ns          215 ns      3200000 items_per_second=4.65455M/s
+
+=== Benchmark Run: Thu, Jan  1, 2026  3:24:00 PM ===
+-----------------------------------------------------------------------------
+Benchmark                   Time             CPU   Iterations UserCounters...
+-----------------------------------------------------------------------------
+BM_AddOrder              3102 ns         3115 ns       235789 items_per_second=321.074k/s
+BM_CancelOrder           2498 ns         2065 ns       280000 items_per_second=484.324k/s
+BM_ModifyOrder           1948 ns         1904 ns       344615 items_per_second=525.128k/s
+BM_BestBid               41.5 ns         41.7 ns     17230769 items_per_second=23.9732M/s
+BM_BestAsk               43.2 ns         42.5 ns     15448276 items_per_second=23.5402M/s
+BM_GetSpread             74.8 ns         71.1 ns     11200000 items_per_second=14.0549M/s
+BM_GetMidPrice           74.5 ns         73.9 ns     11200000 items_per_second=13.5245M/s
+BM_GetVolumeInfo         7.50 ns         7.32 ns     89600000 items_per_second=136.533M/s
+BM_GetVWAP                734 ns          725 ns      1120000 items_per_second=1.37846M/s
+BM_GetRecentTrades        219 ns          209 ns      3446154 items_per_second=4.79465M/s

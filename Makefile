@@ -25,4 +25,11 @@ bench: benchmark/benchmark.cpp src/orderbook.cpp
 google-bench: benchmark/google_benchmark.cpp src/orderbook.cpp
 	$(CXX) $(CXXFLAGS) benchmark/google_benchmark.cpp src/orderbook.cpp -o google-bench $(BENCHMARK_LIB) -lpthread -lstdc++exp -lshlwapi
 
-.PHONY: all clean run bench google-bench
+run-bench: google-bench
+	@echo "" >> benchmark/results.txt
+	@echo "=== Benchmark Run: $$(date) ===" >> benchmark/results.txt
+	@./google-bench
+	@./google-bench --benchmark_color=false >> benchmark/results.txt
+	@echo "Results saved to benchmark/results.txt"
+
+.PHONY: all clean run bench google-bench run-bench
